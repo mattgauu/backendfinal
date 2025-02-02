@@ -3,33 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carritos</title>
+    <title>Lista de Carritos</title>
+    
+        
 </head>
 <body>
     <h1>Lista de Carritos</h1>
     <a href="/"><button>Regresar al Home</button></a>
 
+    <!-- Formulario para buscar un carrito por ID -->
+    <form id="searchCartForm" onsubmit="searchCart(event)">
+        <label for="cartId">Buscar carrito por ID:</label>
+        <input type="text" id="cartId" name="cartId" required>
+        <button type="submit">Buscar</button>
+    </form>
+
     <!-- Lista de carritos -->
     <ul>
         {{#each carts}}
             <li>
-                <strong>ID:</strong> {{this._id}} <br>
+                <strong>ID del Carrito:</strong> {{this._id}}<br>
                 <strong>Productos:</strong>
                 <ul>
                     {{#each this.products}}
-                        <li>{{this.product.title}} - ${{this.product.price}} (Cantidad: {{this.quantity}})</li>
+                        <li>
+                            {{#if this.product}}
+                                <strong>Producto:</strong> {{this.product.title}}<br>
+                                <strong>Cantidad:</strong> {{this.quantity}}<br>
+                                <strong>Precio Unitario:</strong> ${{this.product.price}}<br>
+                                <strong>Total:</strong> ${{this.total}}<br>
+                            {{else}}
+                                <strong>Producto:</strong> <span style="color: red;">Producto no encontrado</span><br>
+                            {{/if}}
+                        </li>
                     {{/each}}
                 </ul>
+                <strong>Total del Carrito:</strong> ${{this.cartTotal}}<br>
+                <a href="/carts/{{this._id}}"><button>Ver Detalles</button></a>
             </li>
         {{/each}}
     </ul>
 
-    <!-- Formulario para buscar un carrito por ID -->
-    <h2>Buscar carrito por ID:</h2>
-    <form action="/carts/search" method="GET">
-        <label for="cartId">ID del carrito:</label>
-        <input type="text" id="cartId" name="cartId" required>
-        <button type="submit">Buscar</button>
-    </form>
+    <!-- Paginación -->
+    <div class="pagination">
+        {{#if hasPrevPage}}
+            <a href="/carts?numPage={{prevPage}}"><button>Anterior</button></a>
+        {{/if}}
+        <span>Página {{page}}</span>
+        {{#if hasNextPage}}
+            <a href="/carts?numPage={{nextPage}}"><button>Siguiente</button></a>
+        {{/if}}
+    </div>
+
+    <script>
+        // Función para buscar un carrito por ID
+        function searchCart(event) {
+            event.preventDefault();
+            const cartId = document.getElementById('cartId').value;
+            window.location.href = `/carts/${cartId}`;
+        }
+    </script>
 </body>
 </html>

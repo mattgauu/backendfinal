@@ -1,26 +1,35 @@
-<h1>Lista de Carritos</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Carrito</title>
+    
+</head>
+<body>
+    <h1>Detalles del Carrito</h1>
     <a href="/"><button>Regresar al Home</button></a>
 
-    <!-- Lista de carritos -->
-    <h2>Carritos existentes:</h2>
-    <ul>
-        {{#each carts}}
-            <li>
-                <strong>ID:</strong> {{this.id}} <br>
-                <strong>Productos:</strong>
-                <ul>
-                    {{#each this.products}}
-                        <li>{{this.name}} - ${{this.price}}</li>
-                    {{/each}}
-                </ul>
-            </li>
-        {{/each}}
-    </ul>
-
-    <!-- Formulario para buscar un carrito por ID -->
-    <h2>Buscar carrito por ID:</h2>
-    <form action="/carts/search" method="GET">
-        <label for="cartId">ID del carrito:</label>
-        <input type="text" id="cartId" name="cartId" required>
-        <button type="submit">Buscar</button>
-    </form>
+    <!-- Detalles del carrito -->
+    <div>
+        <strong>ID del Carrito:</strong> {{cart._id}}<br>
+        <strong>Productos:</strong>
+        <ul>
+            {{#each cart.products}}
+                <li>
+                    {{#if this.product}}
+                        <strong>Producto:</strong> {{this.product.title}}<br>
+                        <strong>Cantidad:</strong> {{this.quantity}}<br>
+                        <strong>Precio Unitario:</strong> ${{this.product.price}}<br>
+                        
+                    {{else}}
+                        <strong>Producto:</strong> <span style="color: red;">Producto no encontrado</span><br>
+                    {{/if}}
+                </li>
+            {{/each}}
+        </ul>
+        
+    </div>
+    
+</body>
+</html>
