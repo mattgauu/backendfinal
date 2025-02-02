@@ -4,6 +4,10 @@ import cartsModel from "../models/carts.models.js";
 
 const router = Router();
 
+const handleError = (res, redirectPath, errorMessage) => {
+  res.redirect(`${redirectPath}?error=${errorMessage}`);
+};
+
 // Renderiza la página principal con enlaces a las secciones
 router.get("/", (req, res) => {
   res.render("home");
@@ -33,7 +37,7 @@ router.get("/products", async (req, res) => {
       page,
     });
   } catch (error) {
-    res.redirect("/?error=Error al obtener productos");
+    handleError(res, "/", "Error al obtener productos");
   }
 });
 
@@ -43,7 +47,7 @@ router.get("/carts", async (req, res) => {
     const carts = await cartsModel.find().populate("products.product").lean();
     res.render("carts-list", { carts });
   } catch (error) {
-    res.redirect("/?error=Error al obtener carritos");
+    handleError(res, "/", "Error al obtener carritos");
   }
 });
 
@@ -52,11 +56,11 @@ router.get("/carts/:cartId", async (req, res) => {
   try {
     const cart = await cartsModel.findById(req.params.cartId).populate("products.product").lean();
     if (!cart) {
-      return res.redirect("/carts?error=Carrito no encontrado");
+      return handleError(res, "/carts", "Carrito no encontrado");
     }
     res.render("carts", { cart });
   } catch (error) {
-    res.redirect("/carts?error=Error al obtener el carrito");
+    handleError(res, "/carts", "Error al obtener el carrito");
   }
 });
 
@@ -78,6 +82,31 @@ router.post("/carts/:cartId/add/:productId", async (req, res) => {
     res.json({ success: true, message: "Producto agregado al carrito" });
   } catch (error) {
     res.status(500).json({ error: "Error al agregar producto al carrito" });
+  }
+});
+
+// Nueva ruta para crear un carrito
+router.post("/carts/create", async (req, res) => {
+  try {
+    const newCart = new cartsModel({ products: [] });
+    await newCart.save();
+    res.json({ success: true, cartId: newCart._id });
+  } catch (error) {
+    res.status(500).json({ error: "Error al crear carrito" });
+  }
+});
+
+// Nueva ruta para buscar un carrito por ID
+router.get("/carts/search", async (req, res) => {
+  try {
+    const cartId = req.query.cartId;
+    const cart = await cartsModel.findById(cartId).populate("products.product").lean();
+    if (!cart) {
+      return res.render("carts-list", { carts: [], error: "Carrito no encontrado" });
+    }
+    res.render("carts-list", { carts: [cart] });
+  } catch (error) {
+    handleError(res, "/carts", "Error al buscar el carrito");
   }
 });
 

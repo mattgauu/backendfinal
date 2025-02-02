@@ -1,23 +1,26 @@
-<h1>Carrito de Compras</h1>
+<h1>Lista de Carritos</h1>
+    <a href="/"><button>Regresar al Home</button></a>
 
-<div>
-    {{#if cart.products.length}}
-        <ul>
-            {{#each cart.products}}
-                <li>
-                    <strong>Producto:</strong> {{this.product.title}}<br>
-                    <strong>Categoría:</strong> {{this.product.category}}<br>
-                    <strong>Precio:</strong> {{this.product.price}}<br>
-                    <strong>Cantidad:</strong> {{this.quantity}}<br>
-                </li>
-                <hr>
-            {{/each}}
-        </ul>
-    {{else}}
-        <p>El carrito está vacío.</p>
-    {{/if}}
-</div>
+    <!-- Lista de carritos -->
+    <h2>Carritos existentes:</h2>
+    <ul>
+        {{#each carts}}
+            <li>
+                <strong>ID:</strong> {{this.id}} <br>
+                <strong>Productos:</strong>
+                <ul>
+                    {{#each this.products}}
+                        <li>{{this.name}} - ${{this.price}}</li>
+                    {{/each}}
+                </ul>
+            </li>
+        {{/each}}
+    </ul>
 
-<nav>
-    <a href="/">Volver al inicio</a>
-</nav>
+    <!-- Formulario para buscar un carrito por ID -->
+    <h2>Buscar carrito por ID:</h2>
+    <form action="/carts/search" method="GET">
+        <label for="cartId">ID del carrito:</label>
+        <input type="text" id="cartId" name="cartId" required>
+        <button type="submit">Buscar</button>
+    </form>

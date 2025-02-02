@@ -1,59 +1,13 @@
-<h1>Lista de productos</h1>
-
-
-    
-<div>
-    {{#if products.length}}
-        <ul>
-            {{#each products}}
-                <li>
-                    <strong>Título: </strong>{{this.title}}<br>
-                    <strong>Categoría: </strong>{{this.category}}<br>
-                    <strong>Stock: </strong>{{this.stock}}<br>
-                    <strong>Precio: </strong>{{this.price}}<br>
-                </li>
-                <hr>
-            {{/each}}
-        </ul>
-    {{else}}
-        <p>No hay productos disponibles.</p>
-    {{/if}}
-</div>
-
-<nav>
-    {{#if hasPrevPage }}
-        <a href="/products?numPage={{prevPage}}">Anterior</a>
-    {{/if}}
-    
-    <label>Página actual: {{page}}</label>
-
-    {{#if hasNextPage }}
-        <a href="/products?numPage={{nextPage}}">Siguiente</a>
-    {{/if}}
-</nav>
-
-
-
-<h1>Consultar un Carrito</h1>
-
-<form id="cartForm">
-  <label for="cartId">ID del Carrito:</label>
-  <input type="text" id="cartId" name="cartId" placeholder="Ingresa el ID del carrito" required>
-  <button type="submit">Buscar Carrito</button>
-</form>
-
-<script>
-  document.getElementById("cartForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Evita el envío normal del formulario
-    const cartId = document.getElementById("cartId").value;
-    if (cartId) {
-      window.location.href = `/api/carts/${cartId}`; // Redirige a la ruta correcta
-    }
-  });
-</script>
-
-
-
-{{#if error}}
-    <p style="color: red;">{{error}}</p>
-{{/if}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Bienvenido al Home</h1>
+    <a href="/products"><button>Ir a Productos</button></a>
+    <a href="/carts"><button>Ir a Carritos</button></a>
+</body>
+</html>

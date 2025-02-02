@@ -1,1 +1,63 @@
-<h1> products</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+</head>
+<body>
+    <h1>Lista de Productos</h1>
+    <a href="/"><button>Regresar al Home</button></a>
+
+    <!-- Lista de productos -->
+    <ul>
+        {{#each products}}
+            <li>
+                <strong>{{this.title}}</strong> - ${{this.price}}<br>
+                <strong>Descripción:</strong> {{this.description}}<br>
+                <strong>Categoría:</strong> {{this.category}}<br>
+                <strong>Stock:</strong> {{this.stock}}<br>
+                <strong>ID:</strong> {{this._id}}<br>
+                <button onclick="addToCart('{{this._id}}')">Añadir al carrito</button>
+            </li>
+        {{/each}}
+    </ul>
+
+    <!-- Botón para crear un nuevo carrito -->
+    <button onclick="createCart()">Crear nuevo carrito</button>
+    <p id="cartIdMessage"></p>
+
+    <!-- Paginación -->
+    <div>
+        {{#if hasPrevPage}}
+            <a href="/products?numPage={{prevPage}}"><button>Anterior</button></a>
+        {{/if}}
+        <span>Página {{page}}</span>
+        {{#if hasNextPage}}
+            <a href="/products?numPage={{nextPage}}"><button>Siguiente</button></a>
+        {{/if}}
+    </div>
+
+    <script>
+        // Función para añadir un producto al carrito
+        async function addToCart(productId) {
+            const cartId = prompt("Ingrese el ID del carrito al que desea agregar el producto:");
+            if (!cartId) {
+                alert("Debe ingresar un ID de carrito válido.");
+                return;
+            }
+
+            const response = await fetch(`/carts/${cartId}/add/${productId}`, { method: 'POST' });
+            const result = await response.json();
+            alert(result.message);
+        }
+
+        // Función para crear un nuevo carrito
+        async function createCart() {
+            const response = await fetch('/carts/create', { method: 'POST' });
+            const result = await response.json();
+            document.getElementById('cartIdMessage').innerText = `Nuevo carrito creado con ID: ${result.cartId}`;
+        }
+    </script>
+</body>
+</html>
